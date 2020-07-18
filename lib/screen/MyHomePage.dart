@@ -36,7 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _currentTabIndex = 0;
 
   final AuthorService authorService = AuthorService();
-  final Photoprovider photoService = Photoprovider();
+  //final Photoprovider photoService = Photoprovider();
 
   @override
   Widget build(BuildContext context) {
