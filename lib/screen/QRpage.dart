@@ -15,10 +15,6 @@ class QRpage extends State<GeneratePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('User'),
-        actions: <Widget>[],
-      ),
       body: SingleChildScrollView(
         child: Container(
           color: Colors.yellowAccent,

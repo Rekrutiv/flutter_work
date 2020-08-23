@@ -1,26 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:flutterwork/modals/userauth.dart';
 import 'package:flutterwork/providerPage/Photoprovider.dart';
+import 'package:flutterwork/providerPage/Userprovider.dart';
 import 'package:flutterwork/screen/Imagescreen.dart';
+import 'package:flutterwork/screen/Login.dart';
 import 'package:flutterwork/screen/ProfileUser.dart';
 import 'package:flutterwork/screen/QRpage.dart';
 import 'package:flutterwork/service/AuthorService.dart';
 import 'package:provider/provider.dart';
 import 'Listexample.dart';
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'User',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
-      // ),
-    );
-  }
-}
+//import 'package:firebase_auth/firebase_auth.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -34,26 +24,44 @@ class _MyHomePageState extends State<MyHomePage> {
   // This navigator state will be used to navigate different pages
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
   int _currentTabIndex = 0;
-
+  final Userprovider userProvider = Userprovider();
   final AuthorService authorService = AuthorService();
+
   //final Photoprovider photoService = Photoprovider();
 
   @override
   Widget build(BuildContext context) {
+    final UserAuth user = Provider.of<UserAuth>(context);
     return MultiProvider(
       providers: [
-          ChangeNotifierProvider(create: (BuildContext context) => Photoprovider()),
-          FutureProvider(create: (context) => authorService.fetchauthors(),     catchError: (context, error) {
-        print(error.toString());
-     },),
-      ],child:
-//    Consumer<Photoprovider>(
-//        builder: (context, provider, child) =>
-         SafeArea(
-        child: Scaffold(
-          body: Navigator(key: _navigatorKey, onGenerateRoute: generateRoute),
-          bottomNavigationBar: _bottomNavigationBar(),
+        ChangeNotifierProvider(
+            create: (BuildContext context) => Photoprovider()),
+        FutureProvider(
+          create: (context) => authorService.fetchauthors(),
+          catchError: (context, error) {
+            print(error.toString());
+          },
         ),
+      ],
+      child: Scaffold(
+        backgroundColor: Colors.blueAccent,
+        appBar: AppBar(
+          title: Text(user.toString()),
+          actions: <Widget>[
+            GestureDetector(
+              onTap: () {
+                print(userProvider.getuser);
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => LoginScreen()));
+              },
+              child: Icon(Icons.exit_to_app),
+            )
+          ],
+          backgroundColor: Colors.transparent,
+          //elevation: 0.0,
+        ),
+        body: Navigator(key: _navigatorKey, onGenerateRoute: generateRoute),
+        bottomNavigationBar: _bottomNavigationBar(),
       ),
     );
   }
@@ -102,14 +110,13 @@ class _MyHomePageState extends State<MyHomePage> {
   Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case "Home":
-        return MaterialPageRoute(builder: (context) =>ProfileUser() );
-
+        return MaterialPageRoute(builder: (context) => ProfileUser());
       case "QR":
-        return MaterialPageRoute(builder: (context) => Listexample() );
+        return MaterialPageRoute(builder: (context) => Listexample());
       case "Photo":
         return MaterialPageRoute(builder: (context) => Imagescreen());
       case "Profile":
-        return MaterialPageRoute(builder: (context) =>  GeneratePage());
+        return MaterialPageRoute(builder: (context) => GeneratePage());
 
       default:
         return MaterialPageRoute(builder: (context) => ProfileUser());

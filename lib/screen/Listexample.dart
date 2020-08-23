@@ -12,9 +12,6 @@ class Listexample extends StatelessWidget {
 
     return Scaffold(
 
-        appBar: AppBar(
-          title: Text('User'),
-        ),
         body: (imagefullscreen == null)
             ? Center(
                 child: CircularProgressIndicator(),

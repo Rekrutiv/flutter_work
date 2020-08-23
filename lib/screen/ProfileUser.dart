@@ -5,7 +5,7 @@ import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert' as convert;
+
 
 class ProfileUser extends StatefulWidget {
   @override
@@ -18,9 +18,7 @@ class _ProfileUser extends State<ProfileUser> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text('User'),
-        ),
+
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Stack(

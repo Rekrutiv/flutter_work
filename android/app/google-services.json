@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1032355756293",
+    "firebase_url": "https://templateapp-44d49.firebaseio.com",
+    "project_id": "templateapp-44d49",
+    "storage_bucket": "templateapp-44d49.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1032355756293:android:d1be4bb2fa163af87b1f6c",
+        "android_client_info": {
+          "package_name": "com.rekrutiv.fluttertemplate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1032355756293-oqjkp9prf6gi76mcnhchkde5jkr7ma0j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCY3ZbBcxa9C_bE7Ayrwf0J0xx6p1aisfE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1032355756293-oqjkp9prf6gi76mcnhchkde5jkr7ma0j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

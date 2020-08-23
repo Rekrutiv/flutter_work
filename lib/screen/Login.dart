@@ -1,182 +1,236 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutterwork/main.dart';
-import 'package:flutterwork/screen/ProfileUser.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutterwork/screen/MyHomePage.dart';
+import 'package:flutterwork/service/auth.dart';
 
 class LoginScreen extends StatefulWidget {
+  LoginScreen({Key key}) : super(key: key);
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  TextEditingController emailController = new TextEditingController();
-  TextEditingController passwordController = new TextEditingController();
-  String nUsername = "";
-  String nPassword = "";
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
 
-  Widget _buildEmailTF() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Email',
-        ),
-        SizedBox(height: 10.0),
-        Container(
-          alignment: Alignment.centerLeft,
-          //decoration: kBoxDecorationStyle,
-          height: 60.0,
-          child: TextField(
-            controller: emailController,
-            keyboardType: TextInputType.emailAddress,
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'OpenSans',
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.email,
-                color: Colors.white,
-              ),
-              hintText: 'Enter your Email',
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+  String _email;
+  String _password;
+  bool showLogin = true;
 
-  Widget _buildPasswordTF() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(
-          'Password',
-        ),
-        SizedBox(height: 10.0),
-        Container(
-          alignment: Alignment.centerLeft,
-          height: 60.0,
-          child: TextField(
-            controller: passwordController,
-            obscureText: true,
-            style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'OpenSans',
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
-                Icons.lock,
-                color: Colors.white,
-              ),
-              hintText: 'Enter your Password',
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildLoginBtn() {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 25.0),
-      width: double.infinity,
-      child: RaisedButton(
-        elevation: 5.0,
-        onPressed: () {
-          setState(() {
-            nUsername = emailController.text;
-            nPassword = passwordController.text;
-          });
-
-         // if (nUsername =='User' && nPassword =='123456') {
-
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => MyHomePage(),
-              ),
-            );
-          //} else{
-            print('$nUsername $nPassword');}
-
-       // },
-        ,padding: EdgeInsets.all(15.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
-        ),
-        color: Colors.white,
-        child: Text(
-          'LOGIN',
-          style: TextStyle(
-            color: Color(0xFF527DAA),
-            letterSpacing: 1.5,
-            fontSize: 18.0,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'OpenSans',
-          ),
-        ),
-      ),
-    );
-  }
+  final AuthService _authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
-        child: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: Stack(
-            children: <Widget>[
-              Container(
-                height: double.infinity,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Color(0xFF73AEF5),
-                      Color(0xFF61A4F1),
-                      Color(0xFF478DE0),
-                      Color(0xFF398AE5),
-                    ],
-                    stops: [0.1, 0.4, 0.7, 0.9],
-                  ),
-                ),
-              ),
-              Container(
-                height: double.infinity,
-                child: SingleChildScrollView(
-                  physics: AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 40.0,
-                    vertical: 120.0,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(height: 30.0),
-                      _buildEmailTF(),
-                      SizedBox(
-                        height: 30.0,
-                      ),
-                      _buildPasswordTF(),
-                      _buildLoginBtn()
-                    ],
-                  ),
-                ),
-              )
-            ],
-          ),
+    Widget _logo() {
+      return Padding(
+          padding: EdgeInsets.only(top: 100),
+          child: Container(
+              child: Align(
+                  child: Text('LoginPage',
+                      style: TextStyle(
+                        fontSize: 45,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      )))));
+    }
+
+    Widget _input(Icon icon, String hint, TextEditingController controller,
+        bool obscure) {
+      return Container(
+        padding: EdgeInsets.only(left: 20, right: 20),
+        child: TextField(
+          controller: controller,
+          obscureText: obscure,
+          style: TextStyle(fontSize: 20, color: Colors.white),
+          decoration: InputDecoration(
+              hintStyle: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Colors.white30),
+              hintText: hint,
+              focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white, width: 3)),
+              enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white54, width: 1)),
+              prefixIcon: Padding(
+                  padding: EdgeInsets.only(left: 10, right: 10),
+                  child: IconTheme(
+                      data: IconThemeData(color: Colors.white), child: icon))),
         ),
+      );
+    }
+
+    Widget _button(String text, void func()) {
+      return RaisedButton(
+        splashColor: Theme.of(context).primaryColor,
+        highlightColor: Theme.of(context).primaryColor,
+        color: Colors.white,
+        child: Text(text,
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).primaryColor,
+                fontSize: 20)),
+        onPressed: () {
+          func();
+        },
+      );
+    }
+
+    Widget _form(String label, void func()) {
+      return Container(
+        child: Column(
+          children: <Widget>[
+            Padding(
+                padding: EdgeInsets.only(bottom: 20, top: 10),
+                child: _input(
+                    Icon(Icons.email), "EMAIL", _emailController, false)),
+            Padding(
+                padding: EdgeInsets.only(bottom: 20),
+                child: _input(
+                    Icon(Icons.lock), "PASSWORD", _passwordController, true)),
+            SizedBox(
+              height: 20,
+            ),
+            Padding(
+                padding: EdgeInsets.only(left: 20, right: 20),
+                child: Container(
+                    height: 50,
+                    width: MediaQuery.of(context).size.width,
+                    child: _button(label, func)))
+          ],
+        ),
+      );
+    }
+
+    void _signInButtonAction() async {
+      _email = _emailController.text;
+      _password = _passwordController.text;
+
+      if (_email.isEmpty || _password.isEmpty) return;
+      dynamic user = await _authService.signInWithEmailAndPassword(
+          _email.trim(), _password.trim());
+      if (user == null)
+        Fluttertoast.showToast(
+            msg: "Can't SignIn you! Please check your email/password",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIos: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      else {
+        _emailController.clear();
+        _passwordController.clear();
+      }
+    }
+
+    void _registerButtonAction() async {
+      _email = _emailController.text;
+      _password = _passwordController.text;
+
+      if (_email.isEmpty || _password.isEmpty) return;
+
+      dynamic user = await _authService.registerWithEmailAndPassword(
+          _email.trim(), _password.trim());
+      if (user == null)
+        Fluttertoast.showToast(
+            msg: "Can't Register you! Please check your email/password",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIos: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      else {
+        _emailController.clear();
+        _passwordController.clear();
+      }
+    }
+
+    Widget _bottomWave() {
+      return Expanded(
+        child: Align(
+          child: ClipPath(
+            child: Container(
+              color: Colors.yellowAccent,
+              height: 400,
+            ),
+            clipper: BottomWaveClipper(),
+          ),
+          alignment: Alignment.bottomCenter,
+        ),
+      );
+    }
+
+    return Scaffold(
+      backgroundColor: Theme.of(context).primaryColor,
+      resizeToAvoidBottomPadding: false,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          _logo(),
+          (showLogin
+              ? Column(
+                  children: <Widget>[
+                    _form('LOGIN', _signInButtonAction),
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                      child: GestureDetector(
+                          child: Text('Not registered yet? Register!',
+                              style:
+                                  TextStyle(fontSize: 20, color: Colors.white)),
+                          onTap: () {
+                            setState(() {
+                              showLogin = false;
+                            });
+                          }),
+                    )
+                  ],
+                )
+              : Column(
+                  children: <Widget>[
+                    _form('REGISTER', _registerButtonAction),
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                      child: GestureDetector(
+                          child: Text('Already registered? Login!',
+                              style:
+                                  TextStyle(fontSize: 20, color: Colors.white)),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MyHomePage(),
+                              ),
+                            );
+                          }),
+                    )
+                  ],
+                )),
+          _bottomWave()
+        ],
       ),
     );
   }
+}
+
+class BottomWaveClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    var path = Path();
+    path.moveTo(size.width, 0.0);
+    path.lineTo(size.width, size.height);
+    path.lineTo(0.0, size.height);
+    path.lineTo(0.0, size.height + 5);
+    var secondControlPoint = Offset(size.width - (size.width / 2), size.height);
+    var secondEndPoint = Offset(size.width, 0.0);
+    path.quadraticBezierTo(secondControlPoint.dx, secondControlPoint.dy,
+        secondEndPoint.dx, secondEndPoint.dy);
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => true;
 }
