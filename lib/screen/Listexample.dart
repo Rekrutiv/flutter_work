@@ -27,7 +27,7 @@ class Listexample extends StatelessWidget {
                           height: 200,
                           width: 200,
                           decoration: BoxDecoration(
-                              color: Colors.grey,
+                              color: Colors.lightGreenAccent,
                               borderRadius: BorderRadius.circular(10.0)),
                           child: Stack(
                             fit: StackFit.expand,
