@@ -8,6 +8,7 @@ import 'package:flutterwork/screen/Login.dart';
 import 'package:flutterwork/screen/ProfileUser.dart';
 import 'package:flutterwork/screen/QRpage.dart';
 import 'package:flutterwork/service/AuthorService.dart';
+import 'package:flutterwork/service/auth.dart';
 import 'package:provider/provider.dart';
 import 'Listexample.dart';
 //import 'package:firebase_auth/firebase_auth.dart';
@@ -32,6 +33,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final UserAuth user = Provider.of<UserAuth>(context);
+    final String uemail =AuthService().getCurrentUserWithData(user).toString();
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -46,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Scaffold(
         backgroundColor: Colors.blueAccent,
         appBar: AppBar(
-          title: Text(user.toString()),
+          title: Text(uemail),
           actions: <Widget>[
             GestureDetector(
               onTap: () {

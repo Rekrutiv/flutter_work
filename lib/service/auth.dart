@@ -45,6 +45,13 @@ class AuthService{
         ? UserAuth.fromFirebase(user)
         : null);
   }
+//  Stream<UserAuth> get email {
+//    return _fAuth.onAuthStateChanged.map(_mapUserFromFirebase);
+    Future<String> inputData() async {
+      final FirebaseUser user = await FirebaseAuth.instance.currentUser();
+      final String uid = user.uid.toString();
+      return uid;
+    }
 
   Stream<UserAuth> getCurrentUserWithData(UserAuth user){
     return _userDataCollection.document(user?.id).snapshots().map((snapshot)
